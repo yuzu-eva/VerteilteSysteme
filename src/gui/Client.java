@@ -53,7 +53,7 @@ public class Client {
 	
 	public static void main(String[] args) {
 		
-		//Neue Instanz der Klasse Client wird erstellt, für die eine GUI erstellt wird
+		//Neue Instanz der Klasse Client wird erstellt, fï¿½r die eine GUI erstellt wird
 		Client c = new Client();
 		c.createGUI();
 		
@@ -124,10 +124,10 @@ public class Client {
 		clientPanel.add(button_emoji_plane);
 		
 		
-		//Es wird ein BorderLayout hinzugefügt
+		//Es wird ein BorderLayout hinzugefï¿½gt
 		clientFrame.getContentPane().add(BorderLayout.CENTER, clientPanel);
 		
-		//Erlaubt das Schlißen der Applikation durch das rote X
+		//Erlaubt das Schliï¿½en der Applikation durch das rote X
 		clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		clientFrame.setVisible(true);
 		
@@ -139,14 +139,14 @@ public class Client {
 	//Client im locelhost verbindet sich mit dem Server
 	public boolean connectToServer() {
 		try {
-			client = new Socket("192.168.178.32", 5555);
+			client = new Socket("192.168.0.73", 5555);
 			reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			writer = new PrintWriter(client.getOutputStream());
 			appendTextMessages("Netzwerkverbindung hergestellt");
 			
 			return true;
 		} catch (Exception e) {
-			appendTextMessages ("Netzwerkverbindung nicht möglich");
+			appendTextMessages ("Netzwerkverbindung nicht mï¿½glich");
 			e.printStackTrace();
 			
 			return false;
@@ -191,7 +191,7 @@ public class Client {
 		
 	}
 	
-	//Nachricht wird durch das Drücken von Enter versendet
+	//Nachricht wird durch das Drï¿½cken von Enter versendet
 	public class SendPressEnterListener implements KeyListener {
 		
 		@Override
@@ -217,7 +217,7 @@ public class Client {
 		
 	}
 	
-	//Nachricht wird durch das Drücken des Buttons "Senden" verschickt
+	//Nachricht wird durch das Drï¿½cken des Buttons "Senden" verschickt
 	public class SendButtonListener implements ActionListener {
 		
 		@Override
@@ -229,7 +229,7 @@ public class Client {
 		}
 	}
 	
-	//Emoji wird bei Klick des Buttons eingefügt
+	//Emoji wird bei Klick des Buttons eingefï¿½gt
 	public class Klick_Emoji1_Listener implements ActionListener {
 		
 			
@@ -240,7 +240,7 @@ public class Client {
 			//sendMessageToServer();
 		}
 	}
-	//Emoji wird bei Klick des Buttons eingefügt
+	//Emoji wird bei Klick des Buttons eingefï¿½gt
 	public class Klick_Emoji2_Listener implements ActionListener {
 		
 		
@@ -250,7 +250,7 @@ public class Client {
 			//sendMessageToServer();
 		}
 	}
-	//Emoji wird bei Klick des Buttons eingefügt
+	//Emoji wird bei Klick des Buttons eingefï¿½gt
 	public class Klick_Emoji3_Listener implements ActionListener {
 		
 		
@@ -260,7 +260,7 @@ public class Client {
 			//sendMessageToServer();
 		}
 	}
-	//Emoji wird bei Klick des Buttons eingefügt
+	//Emoji wird bei Klick des Buttons eingefï¿½gt
 	public class Klick_Emoji4_Listener implements ActionListener {
 		
 		
@@ -270,7 +270,7 @@ public class Client {
 			//sendMessageToServer();
 		}
 	}
-	//Emoji wird bei Klick des Buttons eingefügt
+	//Emoji wird bei Klick des Buttons eingefï¿½gt
 	public class Klick_Emoji5_Listener implements ActionListener {
 		
 		
