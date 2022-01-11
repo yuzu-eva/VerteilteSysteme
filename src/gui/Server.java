@@ -2,24 +2,27 @@ package gui;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
-
 public class Server {
+	
+	
 	
 	//ServerSocket und PrintWriter werden erstellt
 	ServerSocket server;
 	ArrayList<PrintWriter> list_clientWriter;
 	
-	//Level werden erstellt für die Anzeige von Nachrichten ind er Konsole
+	//Level werden erstellt fï¿½r die Anzeige von Nachrichten ind er Konsole
 	final int LEVEL_ERROR = 1;
 	final int LEVEL_NORMAL = 0;
 	
 	public static void main(String[] args) {
 		
 		//Neue Instanz des Servers wird erzeugt
-		//Solange der Server läuft, hört er den Clients zu und überträgt Nachrichten
+		//Solange der Server lï¿½uft, hï¿½rt er den Clients zu und ï¿½bertrï¿½gt Nachrichten
 		Server s = new Server();
 		if (s.runServer()) {
 			s.listenToClients();
@@ -54,23 +57,25 @@ public class Server {
 			String nachricht;
 			
 			try {
+				
 				while((nachricht = reader.readLine()) != null) {
-					
 					appendTextToConsole("Vom Client: \n" + nachricht, LEVEL_NORMAL);
-					sendToAllClients(nachricht);
-					
+					sendToAllClients(nachricht);		
 				}
 				
 			} catch (IOException e) {
 				e.printStackTrace();
 				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 		}
 		
 		
 	}
-	//Der Server nimmt alle Client-Verbindungen an, holt sich den OUtputStream und eröffnet einen Thread
+	//Der Server nimmt alle Client-Verbindungen an, holt sich den OUtputStream und erï¿½ffnet einen Thread
 	
 	public void listenToClients() {
 		while(true) {
@@ -96,7 +101,7 @@ public class Server {
 	}
 	
 	//Wenn der Server gestartet wird, zeigt die Konsole dies im Level Error
-	//Sollte der Server nicht gestartet werden können, wird die andere Nachricht ausgegeben
+	//Sollte der Server nicht gestartet werden kï¿½nnen, wird die andere Nachricht ausgegeben
 	public boolean runServer() {
 		try {
 		server = new ServerSocket(5555);
@@ -123,7 +128,7 @@ public class Server {
 		
 	}
 	
-	//Der Iterator zählt die Nachrichten und solange noch eine Nachricht gesendet wird,
+	//Der Iterator zï¿½hlt die Nachrichten und solange noch eine Nachricht gesendet wird,
 	// wird diese an alle Clients gecshickt
 	public void sendToAllClients(String message) throws IOException {
 		Iterator it = list_clientWriter.iterator();

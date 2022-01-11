@@ -1,5 +1,6 @@
 package gui;
 
+import javax.crypto.SecretKey;
 import javax.print.Doc;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -10,6 +11,9 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import java.net.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.*;
@@ -18,6 +22,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
+
+import gui.AESEncryptor;
 
 public class Client {
 
@@ -48,7 +54,9 @@ public class Client {
 	BufferedReader reader;
 	Date date;
 	
-	
+	// Key und IV zum Ver-/Entschluesseln der Nachrichten.
+	private static final String secretKey = "GqHUYGzzgVeQezZZEPJwSw==";
+	private static final String initialValue = "ImLWb42jXO8VnvkQ";
 	
 	
 	public static void main(String[] args) {
@@ -139,7 +147,7 @@ public class Client {
 	//Client im locelhost verbindet sich mit dem Server
 	public boolean connectToServer() {
 		try {
-			client = new Socket("192.168.0.73", 5555);
+			client = new Socket(InetAddress.getLocalHost(), 5555);
 			reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			writer = new PrintWriter(client.getOutputStream());
 			appendTextMessages("Netzwerkverbindung hergestellt");
@@ -153,9 +161,11 @@ public class Client {
 		}
 	}
 	
-	public void sendMessageToServer() {
+	public void sendMessageToServer() throws Exception {
 		
-	
+		// Encryptor-Object initialisieren
+		AESEncryptor aes = new AESEncryptor();
+		aes.initFromStrings(secretKey, initialValue);
 		
 		//Zeitstempel wird erstellt
 		SimpleDateFormat date = new SimpleDateFormat("HH:mm");
@@ -164,8 +174,9 @@ public class Client {
 		//Bugfix: Neue Zeile; neue Nachricht		
 		//System.out.println(textField_ClientMessages);
 		
-		//Nachricht wird in der GUI ausgegeben
-		writer.println(timeStamp + " Uhr: "  + textField_Username.getText() + ": " + textField_ClientMessages.getText());
+		//Nachricht wird mit AES/GCM-Algorithmus verschluesselt und gesendet
+		String encryptedMessage = aes.encrypt(timeStamp + " Uhr | " + textField_Username.getText() + ": " + textField_ClientMessages.getText());
+		writer.println(encryptedMessage);
 		writer.flush();
 		
 		//Eingabefeld wird wieder leer und der Client kann direkt weiterschreiben.
@@ -197,7 +208,12 @@ public class Client {
 		@Override
 		public void keyPressed(KeyEvent arg0) {
 			if(arg0.getKeyCode() == KeyEvent.VK_ENTER) {
-				sendMessageToServer();
+				try {
+					sendMessageToServer();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				 
 				  
@@ -222,7 +238,12 @@ public class Client {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			sendMessageToServer();
+			try {
+				sendMessageToServer();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
 			 
 			    
@@ -288,12 +309,18 @@ public class Client {
 		public void run() {
 			String message;
 			
+			// Encryptor-Object initialisieren
+			AESEncryptor aes = new AESEncryptor();
+			aes.initFromStrings(secretKey, initialValue);
+			
 			try {
 				while((message = reader.readLine()) != null) {
-					appendTextMessages(message);
+					// Die vom Server empfangene Nachricht wird entschluesselt und ausgegeben.
+					String decryptedMessage = aes.decrypt(message);
+					appendTextMessages(decryptedMessage);
 					
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				appendTextMessages("Nachricht konnte nicht empfangen werden");
 				e.printStackTrace();
 			}
