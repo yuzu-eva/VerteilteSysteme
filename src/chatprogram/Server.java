@@ -1,42 +1,47 @@
 package chatprogram;
 
-import java.io.*;
-import java.net.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Server {
-	public static void main(String[] args) {
 
-		ExecutorService executor = Executors.newFixedThreadPool(30);
+	ServerSocket serverSocket;
 
-		ServerSocket server;
+	public Server(ServerSocket serverSocket) throws IOException {
+		this.serverSocket = serverSocket;
+	}
+
+	public void startServer() {
 		try {
-			server = new ServerSocket(5555);
-			System.out.println("Server gestartet!");
+			while (!serverSocket.isClosed()) {
+				Socket socket = serverSocket.accept();
+				System.out.println("Neuer Client verbunden");
+				Handler handler = new Handler(socket);
 
-			while (true) {
-
-				try {
-
-					Socket client = server.accept();
-
-					executor.execute(new Handler(client));
-					// Thread t = new Thread(new Handler(client));
-					// t.start();
-
-				} catch (IOException e) {
-
-					e.printStackTrace();
-
-				}
+				Thread thread = new Thread(handler);
+				thread.start();
 			}
-
-		} catch (IOException e1) {
-
-			e1.printStackTrace();
-
+		} catch (IOException e) {
 		}
 	}
 
+	public void closeServerSocket() {
+		try {
+			if (serverSocket != null) {
+				serverSocket.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+
+		ServerSocket serverSocket = new ServerSocket(5554);
+		Server server = new Server(serverSocket);
+		server.startServer();
+	}
 }
+
+

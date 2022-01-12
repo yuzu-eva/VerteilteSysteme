@@ -2,51 +2,87 @@ package chatprogram;
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
+import java.util.*;
 
 public class Client {
-	public static void main(String[] args) {
 
-		Scanner eingabe = new Scanner(System.in);
+	private Socket socket;
+	private BufferedReader reader;
+	private BufferedWriter writer;
+	private String username;
 
+	public Client(Socket socket, String username) {
 		try {
+			this.socket = socket;
+			this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			this.username = username;
+		} catch (IOException e) {
+			closeEverything(socket, reader, writer);
+		}
+	}
 
-			Socket client = new Socket("localhost", 5555);
-			System.out.println("Client gestartet!");
-
-			// Stream
-
-			OutputStream out = client.getOutputStream();
-			PrintWriter writer = new PrintWriter(out);
-
-			InputStream in = client.getInputStream();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-			// Stream end
-
-			System.out.print("Eingabe: ");
-			String anServer = eingabe.nextLine();
-
-			writer.write(anServer + "\n");
+	public void sendMessage() {
+		try {
+			writer.write(username);
+			writer.newLine();
 			writer.flush();
 
-			String s = null;
+			Scanner scanner = new Scanner(System.in);
+			while (socket.isConnected()) {
+				String messageToSend = scanner.nextLine();
+				writer.write(username + ": " + messageToSend);
+				writer.newLine();
+				writer.flush();
+			}
+		} catch (IOException e) {
+			closeEverything(socket, reader, writer);
+		}
+	}
 
-			while ((s = reader.readLine()) != null) {
+	public void listenForMessage() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				String msgFromGroupChat;
 
-				System.out.println("Empfangen vom Server: " + s);
+				while (socket.isConnected()) {
+					try {
+						msgFromGroupChat = reader.readLine();
+						System.out.println(msgFromGroupChat);
+					} catch (IOException e) {
+						closeEverything(socket, reader, writer);
+					}
+				}
 
 			}
 
-			// flush() zum Aktualisieren
-			reader.close();
-			writer.close();
+		}).start();
+	}
 
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+	public void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer) {
+		try {
+			if (reader != null) {
+				reader.close();
+			}
+			if (writer != null) {
+				writer.close();
+			}
+			if (socket != null) {
+				socket.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
 
+	public static void main(String[] args) throws IOException {
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Bitte Username eingeben: ");
+		String username = scanner.nextLine();
+		Socket socket = new Socket("localhost", 5554);
+		Client client = new Client(socket, username);
+		client.listenForMessage();
+		client.sendMessage();
 	}
 }
