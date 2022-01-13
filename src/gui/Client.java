@@ -1,18 +1,7 @@
 package gui;
 
-import javax.print.Doc;
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-
 import java.net.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -22,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
+
+import gui.Log;
 
 public class Client {
 
@@ -38,10 +29,10 @@ public class Client {
 	JButton button_SendMessage;
 	JButton button_emoji_laugh;
 	JButton button_emoji_smile;
-	JButton button_emoji_rainbow;
-	JButton button_emoji_rock;
+	JButton button_emoji_blank;
+	JButton button_emoji_crying;
 	JButton button_emoji_plane;
-	JTextField textField_Username;
+	static JTextField textField_Username;
 
 	Socket client;
 	PrintWriter writer;
@@ -56,12 +47,11 @@ public class Client {
 
 		// Neue Instanz der Klasse Client wird erstellt, f�r die eine GUI erstellt wird
 		Client c = new Client();
-		c.createGUI();
-
+		c.createGUI("");
 	}
 
 	// Erstellung der GUI
-	public void createGUI() {
+	public void createGUI(String uName) {
 		clientFrame = new JFrame("Chatprogramm");
 		clientFrame.setSize(800, 600);
 
@@ -84,17 +74,18 @@ public class Client {
 		button_emoji_smile = new JButton("\uD83D\uDE00");
 		button_emoji_smile.addActionListener(new Klick_Emoji2_Listener());
 
-		button_emoji_rainbow = new JButton("\uD83C\uDF08");
-		button_emoji_rainbow.addActionListener(new Klick_Emoji3_Listener());
+		button_emoji_blank = new JButton("\uD83D\uDE11");
+		button_emoji_blank.addActionListener(new Klick_Emoji3_Listener());
 
-		button_emoji_rock = new JButton("\uD83E\uDD18");
-		button_emoji_rock.addActionListener(new Klick_Emoji4_Listener());
+		button_emoji_crying = new JButton("\uD83D\uDE2D");
+		button_emoji_crying.addActionListener(new Klick_Emoji4_Listener());
 
 		button_emoji_plane = new JButton("\u2708");
 		button_emoji_plane.addActionListener(new Klick_Emoji5_Listener());
 
 		textField_Username = new JTextField(10);
 		textField_Username.setFont(new Font("SansSerif", Font.PLAIN, 10));
+		textField_Username.setText(uName);;
 
 		JScrollPane scrollPane_Messages = new JScrollPane(textPane);
 		scrollPane_Messages.setPreferredSize(new Dimension(700, 500));
@@ -106,8 +97,8 @@ public class Client {
 			// Evtl. Connect-Label in GUI und Console
 		}
 
-		// Tread wird erstellt
-		Thread t = new Thread(new MassagesFromServerListener());
+		// Thread wird erstellt
+		Thread t = new Thread(new MessagesFromServerListener());
 		t.start();
 
 		// GUI-Elemete werden in clientPanel zusammengefasst
@@ -117,23 +108,28 @@ public class Client {
 		clientPanel.add(button_SendMessage);
 		clientPanel.add(button_emoji_laugh);
 		clientPanel.add(button_emoji_smile);
-		clientPanel.add(button_emoji_rainbow);
-		clientPanel.add(button_emoji_rock);
+		clientPanel.add(button_emoji_blank);
+		clientPanel.add(button_emoji_crying);
 		clientPanel.add(button_emoji_plane);
 
 		// Es wird ein BorderLayout hinzugef�gt
 		clientFrame.getContentPane().add(BorderLayout.CENTER, clientPanel);
 
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		
 		// Erlaubt das Schli�en der Applikation durch das rote X
 		clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		clientFrame.setLocation((int)(dim.width/3.5), (int)(dim.height/7));
 		clientFrame.setVisible(true);
+		
+
 
 	}
 
 	// Client im localhost verbindet sich mit dem Server
 	public boolean connectToServer() {
 		try {
-			client = new Socket(InetAddress.getLocalHost(), 5555);
+			client = new Socket("localhost", 5555);
 			reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			writer = new PrintWriter(client.getOutputStream());
 			appendTextMessages("Netzwerkverbindung hergestellt");
@@ -251,7 +247,7 @@ public class Client {
 
 		@Override
 		public void actionPerformed(ActionEvent e1) {
-			textField_ClientMessages.setText("\uD83D\uDE02");
+			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\uD83D\uDE02");
 			// textField_ClientMessages.setText("\uD83D\uDE02");
 			// sendMessageToServer();
 		}
@@ -262,7 +258,7 @@ public class Client {
 
 		@Override
 		public void actionPerformed(ActionEvent e1) {
-			textField_ClientMessages.setText("\uD83D\uDE00");
+			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\uD83D\uDE00");
 			// sendMessageToServer();
 		}
 	}
@@ -272,7 +268,7 @@ public class Client {
 
 		@Override
 		public void actionPerformed(ActionEvent e1) {
-			textField_ClientMessages.setText("\uD83C\uDF08");
+			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\uD83D\uDE11");
 			// sendMessageToServer();
 		}
 	}
@@ -282,7 +278,7 @@ public class Client {
 
 		@Override
 		public void actionPerformed(ActionEvent e1) {
-			textField_ClientMessages.setText("\uD83E\uDD18");
+			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\uD83D\uDE2D");
 			// sendMessageToServer();
 		}
 	}
@@ -292,13 +288,13 @@ public class Client {
 
 		@Override
 		public void actionPerformed(ActionEvent e1) {
-			textField_ClientMessages.setText("\u2708");
+			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\u2708");
 			// sendMessageToServer();
 		}
 	}
 
 	// Nachrichten werden so lange empfangen, wie noch Nachrichten gesendet werden
-	public class MassagesFromServerListener implements Runnable {
+	public class MessagesFromServerListener implements Runnable {
 
 		@Override
 		public void run() {

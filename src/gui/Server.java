@@ -2,17 +2,15 @@ package gui;
 
 import java.io.*;
 import java.net.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Server {
 
-	// ServerSocket und PrintWriter werden erstellt
+	// ServerSocket und PrintWriter werden deklariert
 	ServerSocket server;
 	ArrayList<PrintWriter> list_clientWriter;
 
-	// Level werden erstellt f�r die Anzeige von Nachrichten ind er Konsole
+	// Level werden deklariert f�r die Anzeige von Nachrichten in der Konsole
 	final int LEVEL_ERROR = 1;
 	final int LEVEL_NORMAL = 0;
 
@@ -47,9 +45,9 @@ public class Server {
 		}
 
 		// Solange Nachrichten von Clients gesendet werden, gibt der Server sie weiter.
-		// Server gibt Nachrichten normal auf der Console aus und auch in der GUI.
+		// Server gibt Nachrichten auf der Console aus und auch in der GUI.
 		// Alle Nachrichten werden zudem noch in einer Textdatei gespeichert, um den 
-		// Verlauf beim spaeteren starten des Clients  erneut aufzurufen.
+		// Verlauf beim spaeteren starten des Clients erneut aufzurufen.
 		@Override
 		public void run() {
 
@@ -74,23 +72,27 @@ public class Server {
 		}
 
 	}
-	// Der Server nimmt alle Client-Verbindungen an, holt sich den OutputStream und
-	// er�ffnet einen Thread
-
+	
+	// Es werden genau zwei Clients akzeptiert, danach wird der ServerSocket geschlossen.
+	// Versucht sich ein dritter Client zu verbinden, so empfaengt dieser eine Fehlermeldung.
 	public void listenToClients() {
-		while (true) {
-			try {
-				Socket client = server.accept();
-
-				PrintWriter writer = new PrintWriter(client.getOutputStream());
-				list_clientWriter.add(writer);
-
-				Thread clientThread = new Thread(new ClientHandler(client));
-				clientThread.start();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+	
+		try {
+		Socket client1 = server.accept();
+		PrintWriter writer1 = new PrintWriter(client1.getOutputStream());
+		list_clientWriter.add(writer1);
+		Thread clientThread1 = new Thread(new ClientHandler(client1));
+		clientThread1.start();
+		
+		Socket client2 = server.accept();
+		PrintWriter writer2 = new PrintWriter(client2.getOutputStream());
+		list_clientWriter.add(writer2);
+		Thread clientThread2 = new Thread(new ClientHandler(client2));
+		clientThread2.start();
+		
+		server.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -136,8 +138,9 @@ public class Server {
 
 	}
 	
+	// Methode um den Chatverlauf in einer Textdatei zu speichern.
 	public void saveChatHistory(String message) throws Exception {
-		// txt-file und Writer um den Chatverlauf zu speichern.
+		
 		File file = new File("chatHistory.txt");
 		BufferedWriter fw = new BufferedWriter(new FileWriter(file, true));
 		

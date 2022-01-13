@@ -2,9 +2,7 @@ package gui;
 
 import javax.swing.JOptionPane;
 
-import grundprogramm.Login1;
-
-public class LoginFormDemo {
+public class Login {
 
 	
 	 public static void main(String arg[])  
@@ -15,6 +13,7 @@ public class LoginFormDemo {
 	        	Log form = new Log();  
 	            form.setSize(300,100);   
 	            form.setVisible(true);   
+
 	        }  
 	        catch(Exception e)  
 	        {     
