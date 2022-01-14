@@ -45,7 +45,7 @@ public class Client {
 
 	public static void main(String[] args) {
 
-		// Neue Instanz der Klasse Client wird erstellt, f�r die eine GUI erstellt wird
+		// Neue Instanz der Klasse Client wird erstellt, fuer die eine GUI erstellt wird
 		Client c = new Client();
 		c.createGUI("");
 	}
@@ -85,7 +85,8 @@ public class Client {
 
 		textField_Username = new JTextField(10);
 		textField_Username.setFont(new Font("SansSerif", Font.PLAIN, 10));
-		textField_Username.setText(uName);;
+		textField_Username.setText(uName);
+		;
 
 		JScrollPane scrollPane_Messages = new JScrollPane(textPane);
 		scrollPane_Messages.setPreferredSize(new Dimension(700, 500));
@@ -115,14 +116,12 @@ public class Client {
 		// Es wird ein BorderLayout hinzugef�gt
 		clientFrame.getContentPane().add(BorderLayout.CENTER, clientPanel);
 
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		
-		// Erlaubt das Schli�en der Applikation durch das rote X
-		clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		clientFrame.setLocation((int)(dim.width/3.5), (int)(dim.height/7));
-		clientFrame.setVisible(true);
-		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 
+		// Erlaubt das Schliessen der Applikation durch das rote X
+		clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		clientFrame.setLocation((int) (dim.width / 3.5), (int) (dim.height / 7));
+		clientFrame.setVisible(true);
 
 	}
 
@@ -143,7 +142,7 @@ public class Client {
 			return false;
 		}
 	}
-	
+
 	// Methode zum Aufrufen des Chatverlaufs.
 	public void retrieveChatHistory() throws Exception {
 		AESEncryptor aes = new AESEncryptor();
@@ -200,7 +199,7 @@ public class Client {
 
 	}
 
-	// Nachricht wird durch das Dr�cken von Enter versendet
+	// Nachricht wird durch das Druecken von Enter versendet
 	public class SendPressEnterListener implements KeyListener {
 
 		@Override
@@ -227,7 +226,7 @@ public class Client {
 
 	}
 
-	// Nachricht wird durch das Dr�cken des Buttons "Senden" verschickt
+	// Nachricht wird durch das Druecken des Buttons "Senden" verschickt
 	public class SendButtonListener implements ActionListener {
 
 		@Override
@@ -242,7 +241,7 @@ public class Client {
 		}
 	}
 
-	// Emoji wird bei Klick des Buttons eingef�gt
+	// Emoji wird bei Klick des Buttons eingefuegt
 	public class Klick_Emoji1_Listener implements ActionListener {
 
 		@Override
@@ -253,7 +252,7 @@ public class Client {
 		}
 	}
 
-	// Emoji wird bei Klick des Buttons eingef�gt
+	// Emoji wird bei Klick des Buttons eingefuegt
 	public class Klick_Emoji2_Listener implements ActionListener {
 
 		@Override
@@ -263,7 +262,7 @@ public class Client {
 		}
 	}
 
-	// Emoji wird bei Klick des Buttons eingef�gt
+	// Emoji wird bei Klick des Buttons eingefuegt
 	public class Klick_Emoji3_Listener implements ActionListener {
 
 		@Override
@@ -273,7 +272,7 @@ public class Client {
 		}
 	}
 
-	// Emoji wird bei Klick des Buttons eingef�gt
+	// Emoji wird bei Klick des Buttons eingefuegt
 	public class Klick_Emoji4_Listener implements ActionListener {
 
 		@Override
@@ -283,7 +282,7 @@ public class Client {
 		}
 	}
 
-	// Emoji wird bei Klick des Buttons eingef�gt
+	// Emoji wird bei Klick des Buttons eingefuegt
 	public class Klick_Emoji5_Listener implements ActionListener {
 
 		@Override

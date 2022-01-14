@@ -10,14 +10,14 @@ public class Server {
 	ServerSocket server;
 	ArrayList<PrintWriter> list_clientWriter;
 
-	// Level werden deklariert f�r die Anzeige von Nachrichten in der Konsole
+	// Level werden deklariert fuer die Anzeige von Nachrichten in der Konsole
 	final int LEVEL_ERROR = 1;
 	final int LEVEL_NORMAL = 0;
 
 	public static void main(String[] args) {
 
 		// Neue Instanz des Servers wird erzeugt
-		// Solange der Server l�uft, h�rt er den Clients zu und �bertr�gt Nachrichten
+		// Solange der Server laeuft, hoert er den Clients zu und uebertraegt Nachrichten
 		Server s = new Server();
 		if (s.runServer()) {
 			s.listenToClients();
@@ -46,7 +46,7 @@ public class Server {
 
 		// Solange Nachrichten von Clients gesendet werden, gibt der Server sie weiter.
 		// Server gibt Nachrichten auf der Console aus und auch in der GUI.
-		// Alle Nachrichten werden zudem noch in einer Textdatei gespeichert, um den 
+		// Alle Nachrichten werden zudem noch in einer Textdatei gespeichert, um den
 		// Verlauf beim spaeteren starten des Clients erneut aufzurufen.
 		@Override
 		public void run() {
@@ -72,32 +72,34 @@ public class Server {
 		}
 
 	}
-	
-	// Es werden genau zwei Clients akzeptiert, danach wird der ServerSocket geschlossen.
-	// Versucht sich ein dritter Client zu verbinden, so empfaengt dieser eine Fehlermeldung.
+
+	// Es werden genau zwei Clients akzeptiert, danach wird der ServerSocket
+	// geschlossen.
+	// Versucht sich ein dritter Client zu verbinden, so empfaengt dieser eine
+	// Fehlermeldung.
 	public void listenToClients() {
-	
+
 		try {
-		Socket client1 = server.accept();
-		PrintWriter writer1 = new PrintWriter(client1.getOutputStream());
-		list_clientWriter.add(writer1);
-		Thread clientThread1 = new Thread(new ClientHandler(client1));
-		clientThread1.start();
-		
-		Socket client2 = server.accept();
-		PrintWriter writer2 = new PrintWriter(client2.getOutputStream());
-		list_clientWriter.add(writer2);
-		Thread clientThread2 = new Thread(new ClientHandler(client2));
-		clientThread2.start();
-		
-		server.close();
+			Socket client1 = server.accept();
+			PrintWriter writer1 = new PrintWriter(client1.getOutputStream());
+			list_clientWriter.add(writer1);
+			Thread clientThread1 = new Thread(new ClientHandler(client1));
+			clientThread1.start();
+
+			Socket client2 = server.accept();
+			PrintWriter writer2 = new PrintWriter(client2.getOutputStream());
+			list_clientWriter.add(writer2);
+			Thread clientThread2 = new Thread(new ClientHandler(client2));
+			clientThread2.start();
+
+			server.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	// Wenn der Server gestartet wird, zeigt die Konsole dies im Level Error
-	// Sollte der Server nicht gestartet werden k�nnen, wird die andere Nachricht
+	// Sollte der Server nicht gestartet werden koennen, wird die andere Nachricht
 	// ausgegeben
 	public boolean runServer() {
 		try {
@@ -124,7 +126,7 @@ public class Server {
 
 	}
 
-	// Der Iterator z�hlt die Nachrichten und solange noch eine Nachricht gesendet
+	// Der Iterator zaehlt die Nachrichten und solange noch eine Nachricht gesendet
 	// wird, wird diese an alle Clients geschickt.
 	public void sendToAllClients(String message) throws IOException {
 		Iterator<PrintWriter> it = list_clientWriter.iterator();
@@ -137,17 +139,17 @@ public class Server {
 		}
 
 	}
-	
+
 	// Methode um den Chatverlauf in einer Textdatei zu speichern.
 	public void saveChatHistory(String message) throws Exception {
-		
+
 		File file = new File("chatHistory.txt");
 		BufferedWriter fw = new BufferedWriter(new FileWriter(file, true));
-		
-		fw.write(message +"\n");
+
+		fw.write(message + "\n");
 		fw.flush();
 		fw.close();
-		
+
 	}
 
 }
