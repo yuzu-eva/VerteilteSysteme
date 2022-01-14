@@ -12,8 +12,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 
-import gui.Log;
-
 public class Client {
 
 	// Alle Elemente der GUI werden erstellt
@@ -113,7 +111,7 @@ public class Client {
 		clientPanel.add(button_emoji_crying);
 		clientPanel.add(button_emoji_plane);
 
-		// Es wird ein BorderLayout hinzugef�gt
+		// Es wird ein BorderLayout hinzugefuegt
 		clientFrame.getContentPane().add(BorderLayout.CENTER, clientPanel);
 
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -136,7 +134,7 @@ public class Client {
 
 			return true;
 		} catch (Exception e) {
-			appendTextMessages("Netzwerkverbindung nicht m�glich");
+			appendTextMessages("Netzwerkverbindung nicht moeglich");
 			e.printStackTrace();
 
 			return false;
@@ -247,8 +245,6 @@ public class Client {
 		@Override
 		public void actionPerformed(ActionEvent e1) {
 			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\uD83D\uDE02");
-			// textField_ClientMessages.setText("\uD83D\uDE02");
-			// sendMessageToServer();
 		}
 	}
 
@@ -258,7 +254,6 @@ public class Client {
 		@Override
 		public void actionPerformed(ActionEvent e1) {
 			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\uD83D\uDE00");
-			// sendMessageToServer();
 		}
 	}
 
@@ -268,7 +263,6 @@ public class Client {
 		@Override
 		public void actionPerformed(ActionEvent e1) {
 			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\uD83D\uDE11");
-			// sendMessageToServer();
 		}
 	}
 
@@ -278,7 +272,6 @@ public class Client {
 		@Override
 		public void actionPerformed(ActionEvent e1) {
 			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\uD83D\uDE2D");
-			// sendMessageToServer();
 		}
 	}
 
@@ -288,7 +281,6 @@ public class Client {
 		@Override
 		public void actionPerformed(ActionEvent e1) {
 			textField_ClientMessages.setText(textField_ClientMessages.getText() + "\u2708");
-			// sendMessageToServer();
 		}
 	}
 
