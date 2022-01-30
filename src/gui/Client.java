@@ -19,10 +19,6 @@ public class Client {
 	JPanel clientPanel;
 	JTextArea textPane = new JTextArea();
 
-	// textPane.setText("");
-	// StyledDocument doc = textPane.getDocument();
-	// SimpleAttributeSet keyWord = new SimpleAttributeSet();
-
 	JTextField textField_ClientMessages;
 	JButton button_SendMessage;
 	JButton button_emoji_laugh;
@@ -38,14 +34,16 @@ public class Client {
 	Date date;
 
 	// Key und IV zum Ver-/Entschluesseln der Nachrichten.
+	// Wurden ueber den random generator in AESEncryptor generiert.
 	private static final String secretKey = "GqHUYGzzgVeQezZZEPJwSw==";
 	private static final String initialValue = "ImLWb42jXO8VnvkQ";
 
 	public static void main(String[] args) {
 
 		// Neue Instanz der Klasse Client wird erstellt, fuer die eine GUI erstellt wird
-		Client c = new Client();
-		c.createGUI("");
+		// Nur zu Testzwecken, das eigentliche Starten geschieht ueber den Login.
+//		Client c = new Client();
+//		c.createGUI("");
 	}
 
 	// Erstellung der GUI
@@ -92,7 +90,8 @@ public class Client {
 		scrollPane_Messages.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane_Messages.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		if (!connectToServer()) {
+
+		if (!connectToServer()) { 
 			// Evtl. Connect-Label in GUI und Console
 		}
 
@@ -100,7 +99,7 @@ public class Client {
 		Thread t = new Thread(new MessagesFromServerListener());
 		t.start();
 
-		// GUI-Elemete werden in clientPanel zusammengefasst
+		// GUI-Elemente werden in clientPanel zusammengefasst
 		clientPanel.add(scrollPane_Messages);
 		clientPanel.add(textField_Username);
 		clientPanel.add(textField_ClientMessages);
@@ -182,19 +181,13 @@ public class Client {
 		textField_ClientMessages.requestFocus();
 
 	}
-
+	
+	
+	// Nachricht wird angezeigt
 	public void appendTextMessages(String message) {
-		// Nachricht wird angezeigt
+		
 		textPane.append(message + "\n");
-		// try {
-		// Document doc =
-
-		// doc.insertString(doc.getLength(), message, null);
-		// } catch(BadLocationException exc) {
-		// exc.printStackTrace();
-		// }
-		// textPane.setText(message + "\n");
-
+		
 	}
 
 	// Nachricht wird durch das Druecken von Enter versendet
@@ -214,13 +207,10 @@ public class Client {
 		}
 
 		@Override
-		public void keyReleased(KeyEvent arg0) {
-
-		}
+		public void keyReleased(KeyEvent arg0) { }
 
 		@Override
-		public void keyTyped(KeyEvent arg0) {
-		}
+		public void keyTyped(KeyEvent arg0) { }
 
 	}
 
